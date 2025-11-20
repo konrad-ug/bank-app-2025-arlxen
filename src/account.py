@@ -30,6 +30,27 @@ class Account:
         self.historia.append(-amount)
         self.historia.append(-fee)
 
+
+# Registry for personal accounts
+class AccountsRegistry:
+    def __init__(self):
+        self.accounts = []
+
+    def add_account(self, account):
+        self.accounts.append(account)
+
+    def find_by_pesel(self, pesel):
+        for acc in self.accounts:
+            if hasattr(acc, 'pesel') and acc.pesel == pesel:
+                return acc
+        return None
+
+    def get_all(self):
+        return self.accounts
+
+    def count(self):
+        return len(self.accounts)
+
     def submit_for_loan(self, amount):
         # Only for personal accounts
         # Condition 1: Last 3 transactions are deposits
@@ -87,3 +108,13 @@ class BusinessAccount:
         self.balance -= (amount + fee)
         self.historia.append(-amount)
         self.historia.append(-fee)
+
+    def take_loan(self, amount):
+        # Condition 1: balance at least 2x amount
+        # Condition 2: at least one outgoing transfer of exactly 1775 (ZUS)
+        has_zus = any(x == -1775 for x in self.historia)
+        if self.balance >= 2 * amount and has_zus:
+            self.balance += amount
+            self.historia.append(amount)
+            return True
+        return False
