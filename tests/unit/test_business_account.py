@@ -10,6 +10,24 @@ class TestBusinessAccount:
         assert acc.company_name == "ACME Sp. z o.o."
         assert acc.nip == "1234567890"
 
+    def test_business_history_incoming(self):
+        acc = BusinessAccount(company_name="FirmaX", nip="1234567890")
+        acc.transfer_in(1000)
+        assert acc.historia == [1000]
+
+    def test_business_history_outgoing(self):
+        acc = BusinessAccount(company_name="FirmaX", nip="1234567890")
+        acc.transfer_in(1000)
+        acc.transfer_out(400)
+        assert acc.historia == [1000, -400]
+
+    def test_business_history_express(self):
+        acc = BusinessAccount(company_name="FirmaX", nip="1234567890")
+        acc.transfer_in(1000)
+        acc.express_transfer_out(400)
+        # -400 za przelew, -5 za opłatę
+        assert acc.historia == [1000, -400, -5]
+
     def test_invalid_nip(self):
         acc = BusinessAccount(company_name="FirmaX", nip="123")
         assert acc.nip == "Invalid"

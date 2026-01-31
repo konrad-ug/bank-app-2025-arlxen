@@ -3,6 +3,7 @@ class Account:
         self.first_name = first_name
         self.last_name = last_name
         self.balance = 0
+        self.historia = []
         if pesel is not None and len(pesel) != 11:
             self.pesel = "Invalid"
         else:
@@ -13,17 +14,21 @@ class Account:
 
     def transfer_in(self, amount):
         self.balance += amount
+        self.historia.append(amount)
 
     def transfer_out(self, amount):
         if amount > self.balance:
             raise ValueError("Insufficient funds")
         self.balance -= amount
+        self.historia.append(-amount)
 
     def express_transfer_out(self, amount):
         fee = 1
         if self.balance - amount - fee < -fee:
             raise ValueError("Insufficient funds for express transfer")
         self.balance -= (amount + fee)
+        self.historia.append(-amount)
+        self.historia.append(-fee)
 
     def _is_eligible_for_promo(self):
         if not self.pesel or self.pesel == "Invalid" or len(self.pesel) != 11:
@@ -49,17 +54,22 @@ class BusinessAccount:
         else:
             self.nip = nip
         self.balance = 0
+        self.historia = []
 
     def transfer_in(self, amount):
         self.balance += amount
+        self.historia.append(amount)
 
     def transfer_out(self, amount):
         if amount > self.balance:
             raise ValueError("Insufficient funds")
         self.balance -= amount
+        self.historia.append(-amount)
 
     def express_transfer_out(self, amount):
         fee = 5
         if self.balance - amount - fee < -fee:
             raise ValueError("Insufficient funds for express transfer")
         self.balance -= (amount + fee)
+        self.historia.append(-amount)
+        self.historia.append(-fee)
