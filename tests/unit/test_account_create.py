@@ -26,5 +26,4 @@ def test_account_history_outgoing(account):
 def test_account_history_express(account):
     account.transfer_in(500)
     account.express_transfer_out(300)
-    # -300 za przelew, -1 za opłatę
     assert account.historia == [500, -300, -1]

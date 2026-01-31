@@ -32,7 +32,6 @@ def test_business_history_outgoing(business_acc):
 def test_business_history_express(business_acc):
     business_acc.transfer_in(1000)
     business_acc.express_transfer_out(400)
-    # -400 za przelew, -5 za opłatę
     assert business_acc.historia == [1000, -400, -5]
 
 def test_transfer_in_and_out(business_acc):
