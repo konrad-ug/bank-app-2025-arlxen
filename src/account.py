@@ -30,6 +30,20 @@ class Account:
         self.historia.append(-amount)
         self.historia.append(-fee)
 
+    def submit_for_loan(self, amount):
+        # Only for personal accounts
+        # Condition 1: Last 3 transactions are deposits
+        last_three = self.historia[-3:] if len(self.historia) >= 3 else []
+        deposits_only = all(x > 0 for x in last_three)
+        # Condition 2: Sum of last 5 transactions > amount
+        last_five = self.historia[-5:] if len(self.historia) >= 5 else []
+        sufficient_sum = sum(last_five) > amount if len(last_five) == 5 else False
+        if deposits_only or sufficient_sum:
+            self.balance += amount
+            self.historia.append(amount)
+            return True
+        return False
+
     def _is_eligible_for_promo(self):
         if not self.pesel or self.pesel == "Invalid" or len(self.pesel) != 11:
             return False
